@@ -6,7 +6,7 @@
 
 ==== Description and outcome ====
 # These lines may be processed by testing script, don't change prefixes.
-description: DNS name not in permitted intersection
+description: DNS name unrelated to constraints, but intersection is empty
 expected-outcome: FAIL
 
 ==== Root CA (will be self signed) ====
@@ -22,9 +22,8 @@ expected-outcome: FAIL
 1: ca
 1: expiration_days = -1
 1: cert_signing_key
-1: nc_permit_dns = org
-1: nc_permit_dns = ccc.com
-1: nc_permit_email = ccc.com
+1: nc_permit_dns = three.example.com
+1: nc_permit_dns = redhat.com
 
 ==== Following certificate ====
 2: cn = CA-2
@@ -32,12 +31,11 @@ expected-outcome: FAIL
 2: ca
 2: expiration_days = -1
 2: cert_signing_key
-2: nc_permit_dns = org
-2: nc_permit_dns = aaa.bbb.ccc.com
+2: nc_permit_dns = four.example.com
 
 ==== End-point certificate ====
 3: cn = server-3
 3: echo expiration_days = -1
 3: signing_key
 3: encryption_key
-3: dns_name = xxx.ccc.com
+3: dns_name = five.example.com
