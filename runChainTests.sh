@@ -1,19 +1,31 @@
 #!/bin/sh
 
-#CERTTOOL="${CERTTOOL:-../../../src/certtool${EXEEXT}}"
-CERTTOOL=/home/mukrop/work/gnutls/src/certtool
-OUTPUT=out
+# Tools and binaries
+#GNUTLS_CERTTOOL="${GNUTLS_CERTTOOL:-../../../src/certtool${EXEEXT}}"
+GNUTLS_CERTTOOL=/home/mukrop/work/gnutls/src/certtool
+NSS_CERTUTIL=`which certutil`
+OPENSSL_BIN=`which openssl`
+
+# Directories
+WORKDIR=tmp
+CERTDIR=${WORKDIR}/certs
+
+# Filenames
 CHAINFILE=chain.pem
 
+# Scripts
 CREATECHAIN=./createChain.sh
 
 if [ $# -eq 0 ]
 then
-    echo "Script for testing certificate chains using certool"
-	echo "usage: $0 <chain1.pem> [<chain2.pem> ...]"
-    echo "dependency: createChain.sh"
-    echo "temporary dir for results (will be deleted!): ${OUTPUT}"
-    echo "certtool used: ${CERTTOOL}"
+    echo "Script for validating certificate chains generated from GnuTLS templates using GnuTLS, NSS and OpenSSL."
+	echo "usage: $0 <chain1.tmpl> [<chain2.tmpl> ...]"
+    echo
+    echo "dependency: ${CREATECHAIN}"
+    echo "temporary dir for results (will be deleted!): ${WORKDIR}"
+    echo "GNUTLS_CERTTOOL used: ${GNUTLS_CERTTOOL}"
+    echo "NSS_CERTUTIL used: ${NSS_CERTUTIL}"
+    echo "OPENSSL_BIN used: ${OPENSSL_BIN}"
 	exit -1
 fi
 
@@ -23,8 +35,8 @@ then
     exit -1
 fi
 
-rm -rf ${OUTPUT}
-mkdir -p ${OUTPUT}
+rm -rf ${WORKDIR}
+mkdir -p ${WORKDIR}
 
 for CHAIN in $@
 do
@@ -33,12 +45,65 @@ do
         echo "Warning: Chainfile not present or not readable (${CHAIN})."
         continue
     fi
+
+    # Create chain from template
     DESCRIPTION=`cat ${CHAIN} | grep -e "^description:" | sed 's/^description: \(.*\)$/\1/'`
-    EXPECTED_OUTCOME=`cat ${CHAIN} | grep -e "^expected-outcome:" | sed 's/^expected-outcome: \(.*\)$/\1/'`
-    OUTPUT=${OUTPUT} CERTTOOL=${CERTTOOL} CHAINFILE=${CHAINFILE} ${CREATECHAIN} $CHAIN
-    ${CERTTOOL} --verify-chain --infile ${OUTPUT}/${CHAINFILE} >/dev/null
-    OUTCOME=$?
-    echo "=== ${CHAIN}: ${DESCRIPTION} ==="
-    echo "expected: ${EXPECTED_OUTCOME}"
-    echo "real: ${OUTCOME}"
+    OUTCOME_EXPECTED=`cat ${CHAIN} | grep -e "^expected-outcome:" | sed 's/^expected-outcome: \(.*\)$/\1/'`
+    if [ ${OUTCOME_EXPECTED} = "PASS" ]
+    then
+        OUTCOME_EXPECTED=OK
+    else
+        OUTCOME_EXPECTED=FAIL
+    fi
+    OUTPUT=${CERTDIR} CERTTOOL=${GNUTLS_CERTTOOL} CHAINFILE=${CHAINFILE} ${CREATECHAIN} ${CHAIN}
+
+    # GnuTLS
+    OUTPUT_GNUTLS=$(${GNUTLS_CERTTOOL} --verify-chain --infile ${CERTDIR}/${CHAINFILE} 2>&1)
+    if [ $? -eq 0 ]
+    then
+        OUTCOME_GNUTLS=OK
+    else
+        OUTCOME_GNUTLS=FAIL
+    fi
+
+    # NSS
+    PASSWORDFILE=${WORKDIR}/passwd
+    echo "password" >${PASSWORDFILE}
+    NSS_DB=${WORKDIR}/nss-db
+    rm -rf ${NSS_DB}
+    mkdir ${NSS_DB}
+    ${NSS_CERTUTIL} -N -d ${NSS_DB} -f ${PASSWORDFILE}
+    #${NSS_CERTUTIL} -L -d ${NSS_DB}
+    ${NSS_CERTUTIL} -A -n ${CERTDIR}/0.pem -t "P,P,P" -i ${CERTDIR}/0.pem -d ${NSS_DB}
+    for CERT in ${CERTDIR}/[0-9].pem
+    do
+        ${NSS_CERTUTIL} -A -n ${CERT} -t "CT,CT,CT" -i ${CERT} -d ${NSS_DB}
+    done
+    #${NSS_CERTUTIL} -O -n ${CERT} -d ${NSS_DB} -f passwd
+    OUTPUT_NSS=$(${NSS_CERTUTIL} -V -n ${CERT} -u C -e -l -d ${NSS_DB} -f ${PASSWORDFILE} 2>&1)
+    if [ $? -eq 0 ]
+    then
+        OUTCOME_NSS=OK
+    else
+        OUTCOME_NSS=FAIL
+    fi
+
+    # OpenSSL
+    OUTPUT_OPENSSL=$(${OPENSSL_BIN} verify -verbose -trusted ${CERTDIR}/0.pem -untrusted ${CERTDIR}/chain.pem ${CERT} 2>&1)
+    if [ $? -eq 0 ]
+    then
+        OUTCOME_OPENSSL=OK
+    else
+        OUTCOME_OPENSSL=FAIL
+    fi
+
+    echo -e "${CHAIN}\t${OUTCOME_EXPECTED}\t${OUTCOME_GNUTLS}\t${OUTCOME_NSS}\t${OUTCOME_OPENSSL}\t| ${DESCRIPTION}"
+    if [ 0$DEBUG -gt 0 ]
+    then
+        echo "GnuTLS:  ${OUTPUT_GNUTLS}"
+        echo "NSS:     ${OUTPUT_NSS}"
+        echo "OpenSSL: ${OUTPUT_OPENSSL}"
+    fi
 done
+
+rm -rf nss-db

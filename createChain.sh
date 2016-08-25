@@ -48,27 +48,27 @@ do
 	if [ ${ID} -eq 0 ] # Root CA
     then
 		"${CERTTOOL}" --generate-self-signed --load-privkey "${OUTPUT}/${ID}.key" --outfile \
-			"${OUTPUT}/${ID}.crt" --template "${TMPTEMPLATE}" 2>/dev/null
+			"${OUTPUT}/${ID}.pem" --template "${TMPTEMPLATE}" 2>/dev/null
         if [ ! $? -eq 0 ]
         then
             echo "Error: Could not generate certificate for root CA (ID: ${ID})"
             exit -2
         fi
-#		"${CERTTOOL}" --generate-crl --load-ca-privkey "${OUTPUT}/${name}.key" --load-ca-certificate "${OUTPUT}/${name}.crt" --outfile \
+#		"${CERTTOOL}" --generate-crl --load-ca-privkey "${OUTPUT}/${name}.key" --load-ca-certificate "${OUTPUT}/${name}.pem" --outfile \
 #			"${OUTPUT}/${name}.crl" --template "${TEMPLATE}" 2>/dev/null
     else
         "${CERTTOOL}" --generate-certificate --load-privkey "${OUTPUT}/${ID}.key" \
-            --load-ca-certificate "${OUTPUT}/${PREV_ID}.crt" \
+            --load-ca-certificate "${OUTPUT}/${PREV_ID}.pem" \
             --load-ca-privkey "${OUTPUT}/${PREV_ID}.key" \
-            --outfile "${OUTPUT}/${ID}.crt" --template "${TMPTEMPLATE}" 2>/dev/null
+            --outfile "${OUTPUT}/${ID}.pem" --template "${TMPTEMPLATE}" 2>/dev/null
         if [ ! $? -eq 0 ]
         then
             echo "Error: Could not generate certificate (ID: ${ID})"
             exit -2
         fi
     fi
-    "${CERTTOOL}" --certificate-info --infile "${OUTPUT}/${ID}.crt" \
-        --outfile "${OUTPUT}/${ID}.crt.info" 2>/dev/null
+    "${CERTTOOL}" --certificate-info --infile "${OUTPUT}/${ID}.pem" \
+        --outfile "${OUTPUT}/${ID}.pem.info" 2>/dev/null
     if [ ! $? -eq 0 ]
     then
         echo "Warning: Could not generate info file for certificate (ID: ${ID})"
@@ -80,11 +80,11 @@ rm ${TMPTEMPLATE}
 
 for ID in `seq ${MAXID} -1 0`
 do
-    if [ ! -f "${OUTPUT}/${ID}.crt" ]
+    if [ ! -f "${OUTPUT}/${ID}.pem" ]
     then
         continue
     fi
-	cat "${OUTPUT}/${ID}.crt" >> "${OUTPUT}/${CHAINFILE}"
+	cat "${OUTPUT}/${ID}.pem" >> "${OUTPUT}/${CHAINFILE}"
 done
 
 "${CERTTOOL}" --certificate-info --infile "${OUTPUT}/${CHAINFILE}" \
