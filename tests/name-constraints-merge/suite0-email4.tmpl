@@ -6,8 +6,8 @@
 
 ==== Description and outcome ====
 # These lines may be processed by testing script, don't change prefixes.
-description: email a subdomain of permitted (but subdomains are excluded)
-expected-outcome: FAIL
+description: email is in permitted domain, has full form
+expected-outcome: PASS
 
 ==== Root CA (will be self signed) ====
 0: cn = CA-0
@@ -41,4 +41,4 @@ expected-outcome: FAIL
 3: signing_key
 3: encryption_key
 3: tls_www_client # to prevent CN checking if DNS SAN is not present
-3: email = xxx.ccc.com
+3: email = mail@ccc.com

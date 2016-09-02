@@ -6,8 +6,8 @@
 
 ==== Description and outcome ====
 # These lines may be processed by testing script, don't change prefixes.
-description: email a subdomain of permitted (but subdomains are excluded)
-expected-outcome: FAIL
+description: email a subdomain of permitted (subdomains permitted)
+expected-outcome: PASS
 
 ==== Root CA (will be self signed) ====
 0: cn = CA-0
@@ -24,7 +24,7 @@ expected-outcome: FAIL
 1: cert_signing_key
 1: nc_permit_dns = org
 1: nc_permit_dns = ccc.com
-1: nc_permit_email = ccc.com
+1: nc_permit_email = .ccc.com
 
 ==== Following certificate ====
 2: cn = CA-2
