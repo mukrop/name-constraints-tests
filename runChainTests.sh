@@ -38,6 +38,8 @@ fi
 rm -rf ${WORKDIR}
 mkdir -p ${WORKDIR}
 
+printf '%-20s %-4s | %-7s %-7s %-7s | %s\n' "" TRUE GnuTLS NSS OpenSSL "Test description"
+
 for CHAIN in $@
 do
     if [ ! -f ${CHAIN} ]
@@ -74,14 +76,18 @@ do
     mkdir ${NSS_DB}
     ${NSS_CERTUTIL} -N -d ${NSS_DB} -f ${PASSWORDFILE}
     #${NSS_CERTUTIL} -L -d ${NSS_DB}
-    ${NSS_CERTUTIL} -A -n ${CERTDIR}/0.pem -t "P,P,P" -i ${CERTDIR}/0.pem -d ${NSS_DB}
-    for CERT in ${CERTDIR}/[0-9].pem
+    ${NSS_CERTUTIL} -A -n ${CERTDIR}/0.pem -t "C,C," -i ${CERTDIR}/0.pem -d ${NSS_DB}
+    for CERT in ${CERTDIR}/[1-9].pem
     do
-        ${NSS_CERTUTIL} -A -n ${CERT} -t "CT,CT,CT" -i ${CERT} -d ${NSS_DB}
+        #${NSS_CERTUTIL} -L -d ${NSS_DB}
+        ${NSS_CERTUTIL} -A -n ${CERT} -t ",," -i ${CERT} -d ${NSS_DB}
     done
+    #${NSS_CERTUTIL} -L -d ${NSS_DB}
     #${NSS_CERTUTIL} -O -n ${CERT} -d ${NSS_DB} -f passwd
     OUTPUT_NSS=$(${NSS_CERTUTIL} -V -n ${CERT} -u C -e -l -d ${NSS_DB} -f ${PASSWORDFILE} 2>&1)
-    if [ $? -eq 0 ]
+    RETURN_NSS=$?
+    OUTCOME_NSS=`echo ${OUTPUT_NSS} | grep "Peer's certificate issuer has been marked as not trusted by the user" | wc -l`
+    if [ ${OUTCOME_NSS} -eq 1 ]
     then
         OUTCOME_NSS=OK
     else
@@ -97,7 +103,7 @@ do
         OUTCOME_OPENSSL=FAIL
     fi
 
-    echo -e "${CHAIN}\t${OUTCOME_EXPECTED}\t${OUTCOME_GNUTLS}\t${OUTCOME_NSS}\t${OUTCOME_OPENSSL}\t| ${DESCRIPTION}"
+    printf '%-20s %-4s | %-7s %-7s %-7s | %s\n' `basename ${CHAIN}` ${OUTCOME_EXPECTED} ${OUTCOME_GNUTLS} ${OUTCOME_NSS} ${OUTCOME_OPENSSL} "${DESCRIPTION}"
     if [ 0$DEBUG -gt 0 ]
     then
         echo "GnuTLS:  ${OUTPUT_GNUTLS}"
