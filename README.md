@@ -12,7 +12,7 @@ This repository contains a set of scripts for automatically testing X.509 name c
   * OpenSSL seems not to support IP constraining, thus all corresponding tests report `FAIL` (unsupported name constraint type).
   * If DNS name constraints are present but the subject alternative names extension is not, GnuTLS checks the common name with regard to DNS name constraints (depending on the key purpose). NSS and OpenSSL do not check common name in this situation.
   * Libraries differ in checking the mailbox format: OpenSSL seems to check the format precisely, NSS only partly and GnuTLS not at all.
-* Detailed report of the results can be found in [report.txt](report.txt).
+* Detailed report of the results can be found in [report.md](report.md).
 
 ## Testing
 
