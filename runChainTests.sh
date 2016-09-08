@@ -76,7 +76,7 @@ do
     mkdir ${NSS_DB}
     ${NSS_CERTUTIL} -N -d ${NSS_DB} -f ${PASSWORDFILE}
     #${NSS_CERTUTIL} -L -d ${NSS_DB}
-    ${NSS_CERTUTIL} -A -n ${CERTDIR}/0.pem -t "C,C," -i ${CERTDIR}/0.pem -d ${NSS_DB}
+    ${NSS_CERTUTIL} -A -n ${CERTDIR}/0.pem -t "CT,," -i ${CERTDIR}/0.pem -d ${NSS_DB}
     for CERT in ${CERTDIR}/[1-9].pem
     do
         #${NSS_CERTUTIL} -L -d ${NSS_DB}
@@ -86,8 +86,7 @@ do
     #${NSS_CERTUTIL} -O -n ${CERT} -d ${NSS_DB} -f passwd
     OUTPUT_NSS=$(${NSS_CERTUTIL} -V -n ${CERT} -u C -e -l -d ${NSS_DB} -f ${PASSWORDFILE} 2>&1)
     RETURN_NSS=$?
-    OUTCOME_NSS=`echo ${OUTPUT_NSS} | grep "Peer's certificate issuer has been marked as not trusted by the user" | wc -l`
-    if [ ${OUTCOME_NSS} -eq 1 ]
+    if [ ${RETURN_NSS} -eq 0 ]
     then
         OUTCOME_NSS=OK
     else
