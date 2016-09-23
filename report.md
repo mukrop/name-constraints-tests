@@ -23,7 +23,7 @@ RFC 6125, section 6.4.4 states that "...if and only if the presented identifiers
 
 Furthermore, according to [bug 895063](https://bugzilla.mozilla.org/show_bug.cgi?id=895063), NSS does not constrain IPs in common names when no subject alternative name is present. This was, however, not tested by the provided test suite.
 
-**Secuirty repercussion:** Since certificates with DNS name in CN are still used, one could potentially abuse not constraining the common name by issuing a "valid" certificate by a constrained institutional authority for a third party domain.
+**Security repercussion:** Since certificates with DNS name in CN are still used, one could potentially abuse not constraining the common name by issuing a "valid" certificate by a constrained institutional authority for a third party domain.
 
 **Recommended action:** Inspect whether NSS checks for DNS constraint compliance in common name -- either add a new test case for this or close [bug 552346](https://bugzilla.mozilla.org/show_bug.cgi?id=552346).
 
@@ -35,8 +35,14 @@ For suite0-email1a, the intermediate CA permits any mailbox on the host `ccc.com
 
 For suite0-email3a, the intermediate CA permits any mailbox on any subdomains of `ccc.com` but not on the host of `ccc.com`. The endpoint certificate claims an alternative email name of 'xxx.ccc.com'. This is considered OK by GnuTLS and NSS but not OpenSSL. Both abovementioned suites pass in all libraries, if the endpoint email address is prepended with `mail@`.
 
-Althouh NSS and OpenSSL accept certificates invalid according to the RFCs (wrong email format), we do not see a direct security thread this may pose. Furthermore, it is highly unlikely that a trusted CA would issue certificates with such incomplete email addresses.
+**Security repercussion:** Althouh NSS and OpenSSL accept certificates invalid according to the RFCs (wrong email format), I do not see a direct security thread this may pose. Furthermore, it is highly unlikely that a trusted CA would issue certificates with such incomplete email addresses.
+
+**Recommended action:** None.
 
 ## IP constraints in OpenSSL (tests good2, suite3-ip1, suite3-ip4, suite4-ip1, suite6-ip1, suite7-ip1, suite7-ip3, suite7-ip7, suite8-ip3)
 
 OpenSSL fails on chains that should pass as it does not support IP constraints ('unsupported name constraint type') and the name constraints extension is marked critical.
+
+**Security repercussion:** None, since OpenSSL correctly handles unknown type in critical extension by refusing to validate the certificate.
+
+**Recommended action:** None. (Well, ideally add support for IP constraints.)
