@@ -9,7 +9,7 @@ This repository contains a set of scripts for automatically testing X.509 name c
 * Column `Expected` has the expected result, subsequent columns have results for particular libraries.
 * These were run on Fedora 23 with OpenSSL 1.0.2h-fips, NSS 3.25.0 and GnuTLS 3.5.4 (commit d69e56, unreleased by the date of testing).
 * Test results in summary:
-  * OpenSSL seems not to support IP constraining, thus all corresponding tests report `FAIL` (unsupported name constraint type).
+  * OpenSSL seems not to support IP constraining, thus all corresponding tests see all chains containing IP constraint certificates as invalid (unsupported name constraint type).
   * If DNS name constraints are present but the subject alternative names extension is not, GnuTLS checks the common name with regard to DNS name constraints (depending on the key purpose). NSS and OpenSSL do not check common name in this situation.
   * Libraries differ in checking the mailbox format: OpenSSL seems to check the format precisely, NSS only partly and GnuTLS not at all.
 * Detailed report of the results can be found in [report.md](report.md).
@@ -22,11 +22,11 @@ This repository contains a set of scripts for automatically testing X.509 name c
 
 ## Running the test case
 
-* The suite is run by execucing runChainTests.sh bash script.
+* The suite is run by execucing `runChainTests.sh` bash script.
   * Running with no command line arguments will print the usage and currently set paths for dependencies.
   * Tests are performed by providing a test template as an argument.
   * For running all tests, execute `./runChainTests.sh tests/*/*`
-* By default, outputs from individual libraries is suppressed. To enable it (e.g. for debugging purposes), set envidonment variable 'DEBUG' to 1.
+* By default, outputs from individual libraries is suppressed. To enable it (e.g. for debugging purposes), set envidonment variable 'DEBUG' to 1, i.e. `export DEBUG=1`.
 * The scripts depends on `certtool` (provided by GnuTLS), `certutil` (provided by NSS) and `openssl` (provided by OpenSSL).
 * The script uses system-installed libraries versions by default -- this can be changed in the header of the script.
 
