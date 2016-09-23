@@ -53,9 +53,9 @@ do
     OUTCOME_EXPECTED=`cat ${CHAIN} | grep -e "^expected-outcome:" | sed 's/^expected-outcome: \(.*\)$/\1/'`
     if [ ${OUTCOME_EXPECTED} = "PASS" ]
     then
-        OUTCOME_EXPECTED=OK
+        OUTCOME_EXPECTED=valid
     else
-        OUTCOME_EXPECTED=FAIL
+        OUTCOME_EXPECTED=INvalid
     fi
     OUTPUT=${CERTDIR} CERTTOOL=${GNUTLS_CERTTOOL} CHAINFILE=${CHAINFILE} ${CREATECHAIN} ${CHAIN}
 
@@ -63,9 +63,9 @@ do
     OUTPUT_GNUTLS=$(${GNUTLS_CERTTOOL} --verify-chain --infile ${CERTDIR}/${CHAINFILE} 2>&1)
     if [ $? -eq 0 ]
     then
-        OUTCOME_GNUTLS=OK
+        OUTCOME_GNUTLS=valid
     else
-        OUTCOME_GNUTLS=FAIL
+        OUTCOME_GNUTLS=INvalid
     fi
 
     # NSS
@@ -88,18 +88,18 @@ do
     RETURN_NSS=$?
     if [ ${RETURN_NSS} -eq 0 ]
     then
-        OUTCOME_NSS=OK
+        OUTCOME_NSS=valid
     else
-        OUTCOME_NSS=FAIL
+        OUTCOME_NSS=INvalid
     fi
 
     # OpenSSL
     OUTPUT_OPENSSL=$(${OPENSSL_BIN} verify -verbose -trusted ${CERTDIR}/0.pem -untrusted ${CERTDIR}/chain.pem ${CERT} 2>&1)
     if [ $? -eq 0 ]
     then
-        OUTCOME_OPENSSL=OK
+        OUTCOME_OPENSSL=valid
     else
-        OUTCOME_OPENSSL=FAIL
+        OUTCOME_OPENSSL=INvalid
     fi
 
     printf '%-20s %-8s | %-7s %-7s %-7s | %s\n' `basename ${CHAIN}` ${OUTCOME_EXPECTED} ${OUTCOME_GNUTLS} ${OUTCOME_NSS} ${OUTCOME_OPENSSL} "${DESCRIPTION}"

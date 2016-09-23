@@ -1,107 +1,107 @@
                      Expected | GnuTLS  NSS     OpenSSL | Test description
-bad0.tmpl            FAIL     | FAIL    FAIL    FAIL    | 2 constraints (dns, dns), non-intuitive order
-bad1.tmpl            FAIL     | FAIL    FAIL    FAIL    | empty CN, empty excluded dns
-bad2.tmpl            FAIL     | FAIL    FAIL    FAIL    | multiple dns constraints, empty intersection
-bad3.tmpl            FAIL     | FAIL    OK      OK      | dns in CN, in excluded range
-bad4.tmpl            FAIL     | FAIL    FAIL    FAIL    | basic dns intersection
-bad5.tmpl            FAIL     | FAIL    FAIL    FAIL    | IP in excluded range
-bad6.tmpl            FAIL     | FAIL    FAIL    FAIL    | 2 constraints (dns, email), non-intuitive order
-good0.tmpl           OK       | OK      OK      OK      | empty CN, empty SAN, permitted dns range
-good1.tmpl           OK       | OK      OK      OK      | dns in permitted range
-good2.tmpl           OK       | OK      OK      FAIL    | ipv6 in permitted range
-corner.tmpl          FAIL     | FAIL    FAIL    FAIL    | universal excluded DNS name constraint
-dns1.tmpl            OK       | OK      OK      OK      | DNS name superstring of excluded domain (but not subdomain!)
-dns2.tmpl            OK       | OK      OK      OK      | DNS name with permitted TLD
-dns3.tmpl            FAIL     | FAIL    FAIL    FAIL    | DNS in excluded domain
-dns4.tmpl            FAIL     | FAIL    FAIL    FAIL    | DNS not in permitted fields
-dns5.tmpl            OK       | OK      OK      OK      | DNS name with permitted TLD (with dot)
-email1.tmpl          OK       | OK      OK      OK      | email in directly in permitted fields
-email2.tmpl          FAIL     | FAIL    FAIL    FAIL    | email not in permitted fields
-email3.tmpl          OK       | OK      OK      OK      | email in permitted domain
-email4.tmpl          OK       | OK      OK      OK      | email in subdomain of permitted domain
-email5.tmpl          FAIL     | FAIL    FAIL    FAIL    | email in domain where only subdomains are permitted
-email6.tmpl          FAIL     | FAIL    FAIL    FAIL    | email in excluded domain
-suite10-ip1.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP falls out due to intersection
-suite10-ip2.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP unrelated to constraints
-suite10-ip3.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP falls out due to intersection
-suite10-ip4.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP falls out due to intersection
-suite10-ip5.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP unrelated to constraints
-suite10-ip6.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 both empty intersection - IP falls out due to intersection
-suite11-ip1.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 each once - IP in IPv4 range
-suite11-ip2.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 each once - IP unrelated to permitted constraints
-suite11-ip3.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 each once - IP in IPv6 range
-suite11-ip4.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 each once - IP unrelated to permitted constraints
-suite3b-ip1.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv6 universal excluded range
-suite3b-ip2.tmpl     FAIL     | FAIL    FAIL    FAIL    | IPv6 universal excluded range
-suite3-ip1.tmpl      OK       | OK      OK      FAIL    | IP adress in permitted range
-suite3-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | IP adress out of permitted range
-suite3-ip3.tmpl      FAIL     | FAIL    FAIL    FAIL    | IP adress in excluded range
-suite3-ip4.tmpl      OK       | OK      OK      FAIL    | IPv6 adress in permitted range
-suite3-ip5.tmpl      FAIL     | FAIL    FAIL    FAIL    | IP adress out of permitted range
-suite3-ip6.tmpl      FAIL     | FAIL    FAIL    FAIL    | IP adress in excluded range
-suite4-ip1.tmpl      OK       | OK      OK      FAIL    | simple intersection - IP in intersection
-suite4-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | simple intersection - IP falls out by intersection
-suite4-ip3.tmpl      FAIL     | FAIL    FAIL    FAIL    | simple intersection - IP unrelated to permitted ranges
-suite5-ip1.tmpl      FAIL     | FAIL    FAIL    FAIL    | empty intersection - IP subset of first constraint
-suite5-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | empty intersection - IP unrelated to constraints
-suite5-ip3.tmpl      FAIL     | FAIL    FAIL    FAIL    | empty intersection - IP subset of second constraint
-suite6-ip1.tmpl      OK       | OK      OK      FAIL    | mediocre intersection - IP in intersection
-suite6-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | mediocre intersection - IP falls out by intersecting
-suite6-ip3.tmpl      FAIL     | FAIL    FAIL    FAIL    | mediocre intersection - IP unrealted to constraints
-suite6-ip4.tmpl      FAIL     | FAIL    FAIL    FAIL    | mediocre intersection - IP falls out in intersection
-suite7-ip1.tmpl      OK       | OK      OK      FAIL    | difficult intersection - IP in intersection
-suite7-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | difficult intersection - IP falls out by due to intersection
-suite7-ip3.tmpl      OK       | OK      OK      FAIL    | difficult intersection - IP in intersection
-suite7-ip4.tmpl      FAIL     | FAIL    FAIL    FAIL    | difficult intersection - IP falls out due to intersection
-suite7-ip5.tmpl      FAIL     | FAIL    FAIL    FAIL    | difficult intersection - IP unrelated to permitted constraints
-suite7-ip6.tmpl      FAIL     | FAIL    FAIL    FAIL    | difficult intersection - IP falls out due to intersection
-suite7-ip7.tmpl      OK       | OK      OK      FAIL    | difficult intersection - IP in intersection
-suite7-ip8.tmpl      FAIL     | FAIL    FAIL    FAIL    | difficult intersection - IP unrelated to constraints
-suite8-ip1.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP unrealted to constraints
-suite8-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP falls out due to intersection
-suite8-ip3.tmpl      OK       | OK      OK      FAIL    | IPv6 intersection - IP in intersection
-suite8-ip4.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP falls out due to intersection
-suite8-ip5.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP unrealted to constraints
-suite8-ip6.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP falls out due to intersection
-suite8-ip7.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv6 intersection - IP unrealted to constraints
-suite9-ip1.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 interaction - IP falls out due to intersection
-suite9-ip2.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 interaction - IP unrelated to permitted constraints
-suite9-ip3.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 interaction - IP falls out due to intersection
-suite9-ip4.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 interaction - IPv6 in permitted range (but gets restricted)
-suite9-ip5.tmpl      FAIL     | FAIL    FAIL    FAIL    | IPv4/v6 interaction - IPv6 unrealted to permitted ranges
-suite0-dns10.tmpl    FAIL     | FAIL    FAIL    FAIL    | DNS name a superdomain of permitted intersection
-suite0-dns1.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name not in permitted ranges
-suite0-dns2.tmpl     OK       | OK      OK      OK      | DNS name in permitted TLD intersection
-suite0-dns3.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name not in permitted TLD intersection
-suite0-dns4.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name not in permitted TLD intersection
-suite0-dns5.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name not in permitted TLD intersection
-suite0-dns6.tmpl     OK       | OK      OK      OK      | DNS name a subdomain of permitted intersection
-suite0-dns7.tmpl     OK       | OK      OK      OK      | DNS name is directly a permitted intersection
-suite0-dns8.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name in a different domain than permitted inersection
-suite0-dns9.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name not in permitted intersection
-suite0-email1a.tmpl  OK       | OK      FAIL    FAIL    | email is directly permitted domain
-suite0-email1b.tmpl  OK       | OK      OK      OK      | email is directly permitted domain
-suite0-email2a.tmpl  FAIL     | FAIL    FAIL    FAIL    | email a subdomain of permitted (but subdomains are excluded)
-suite0-email2b.tmpl  FAIL     | FAIL    FAIL    FAIL    | email a subdomain of permitted (but subdomains are excluded)
-suite0-email3a.tmpl  OK       | OK      OK      FAIL    | email a subdomain of permitted (subdomains permitted)
-suite0-email3b.tmpl  OK       | OK      OK      OK      | email a subdomain of permitted (subdomains permitted)
-suite1-dns1.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is a subdomain of excluded
-suite1-dns2.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is a subdomain of excluded
-suite1-dns3.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is directly an excluded range
-suite1-dns4.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is directly an excluded range
-suite1-dns5.tmpl     OK       | OK      OK      OK      | DNS name unrelated to excluded ranges
-suite2-dns1.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is permitted constraint, but intersection is empty
-suite2-dns2.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is permitted constraint, but intersection is empty
-suite2-dns3.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name on a different level than permitted intersection
-suite2-dns4.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is superdomain of permitted, but intersection is empty
-suite2-dns5.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name unrelated to permitted constraints
-suite3-dns1.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is superdomain of permitted intersection
-suite3-dns2.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is permitted constraints that gets out when intersecting
-suite3-dns3.tmpl     OK       | OK      OK      OK      | DNS name is permitted intersection directly
-suite3-dns4.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is string-similar to permitted intersection
-suite3-dns5.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is superdomain of permitted intersection
-suite4-dns1.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is one of the constraints, but intersection is empty
-suite4-dns2.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name is one of the constraints, but intersection is empty
-suite4-dns3.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name unrelated to constraints, but intersection is empty
-suite4-dns4.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name unrelated to constraints, but intersection is empty
-suite4-dns5.tmpl     FAIL     | FAIL    FAIL    FAIL    | DNS name unrelated to constraints, but intersection is empty
+bad0.tmpl            INvalid  | INvalid INvalid INvalid | 2 constraints (dns, dns), non-intuitive order
+bad1.tmpl            INvalid  | INvalid INvalid INvalid | empty CN, empty excluded dns
+bad2.tmpl            INvalid  | INvalid INvalid INvalid | multiple dns constraints, empty intersection
+bad3.tmpl            INvalid  | INvalid valid   valid   | dns in CN, in excluded range
+bad4.tmpl            INvalid  | INvalid INvalid INvalid | basic dns intersection
+bad5.tmpl            INvalid  | INvalid INvalid INvalid | IP in excluded range
+bad6.tmpl            INvalid  | INvalid INvalid INvalid | 2 constraints (dns, email), non-intuitive order
+good0.tmpl           valid    | valid   valid   valid   | empty CN, empty SAN, permitted dns range
+good1.tmpl           valid    | valid   valid   valid   | dns in permitted range
+good2.tmpl           valid    | valid   valid   INvalid | ipv6 in permitted range
+corner.tmpl          INvalid  | INvalid INvalid INvalid | universal excluded DNS name constraint
+dns1.tmpl            valid    | valid   valid   valid   | DNS name superstring of excluded domain (but not subdomain!)
+dns2.tmpl            valid    | valid   valid   valid   | DNS name with permitted TLD
+dns3.tmpl            INvalid  | INvalid INvalid INvalid | DNS in excluded domain
+dns4.tmpl            INvalid  | INvalid INvalid INvalid | DNS not in permitted fields
+dns5.tmpl            valid    | valid   valid   valid   | DNS name with permitted TLD (with dot)
+email1.tmpl          valid    | valid   valid   valid   | email in directly in permitted fields
+email2.tmpl          INvalid  | INvalid INvalid INvalid | email not in permitted fields
+email3.tmpl          valid    | valid   valid   valid   | email in permitted domain
+email4.tmpl          valid    | valid   valid   valid   | email in subdomain of permitted domain
+email5.tmpl          INvalid  | INvalid INvalid INvalid | email in domain where only subdomains are permitted
+email6.tmpl          INvalid  | INvalid INvalid INvalid | email in excluded domain
+suite10-ip1.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP falls out due to intersection
+suite10-ip2.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP unrelated to constraints
+suite10-ip3.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP falls out due to intersection
+suite10-ip4.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP falls out due to intersection
+suite10-ip5.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP unrelated to constraints
+suite10-ip6.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 both empty intersection - IP falls out due to intersection
+suite11-ip1.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 each once - IP in IPv4 range
+suite11-ip2.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 each once - IP unrelated to permitted constraints
+suite11-ip3.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 each once - IP in IPv6 range
+suite11-ip4.tmpl     INvalid  | INvalid INvalid INvalid | IPv4/v6 each once - IP unrelated to permitted constraints
+suite3b-ip1.tmpl     INvalid  | INvalid INvalid INvalid | IPv6 universal excluded range
+suite3b-ip2.tmpl     INvalid  | INvalid INvalid INvalid | IPv6 universal excluded range
+suite3-ip1.tmpl      valid    | valid   valid   INvalid | IP adress in permitted range
+suite3-ip2.tmpl      INvalid  | INvalid INvalid INvalid | IP adress out of permitted range
+suite3-ip3.tmpl      INvalid  | INvalid INvalid INvalid | IP adress in excluded range
+suite3-ip4.tmpl      valid    | valid   valid   INvalid | IPv6 adress in permitted range
+suite3-ip5.tmpl      INvalid  | INvalid INvalid INvalid | IP adress out of permitted range
+suite3-ip6.tmpl      INvalid  | INvalid INvalid INvalid | IP adress in excluded range
+suite4-ip1.tmpl      valid    | valid   valid   INvalid | simple intersection - IP in intersection
+suite4-ip2.tmpl      INvalid  | INvalid INvalid INvalid | simple intersection - IP falls out by intersection
+suite4-ip3.tmpl      INvalid  | INvalid INvalid INvalid | simple intersection - IP unrelated to permitted ranges
+suite5-ip1.tmpl      INvalid  | INvalid INvalid INvalid | empty intersection - IP subset of first constraint
+suite5-ip2.tmpl      INvalid  | INvalid INvalid INvalid | empty intersection - IP unrelated to constraints
+suite5-ip3.tmpl      INvalid  | INvalid INvalid INvalid | empty intersection - IP subset of second constraint
+suite6-ip1.tmpl      valid    | valid   valid   INvalid | mediocre intersection - IP in intersection
+suite6-ip2.tmpl      INvalid  | INvalid INvalid INvalid | mediocre intersection - IP falls out by intersecting
+suite6-ip3.tmpl      INvalid  | INvalid INvalid INvalid | mediocre intersection - IP unrealted to constraints
+suite6-ip4.tmpl      INvalid  | INvalid INvalid INvalid | mediocre intersection - IP falls out in intersection
+suite7-ip1.tmpl      valid    | valid   valid   INvalid | difficult intersection - IP in intersection
+suite7-ip2.tmpl      INvalid  | INvalid INvalid INvalid | difficult intersection - IP falls out by due to intersection
+suite7-ip3.tmpl      valid    | valid   valid   INvalid | difficult intersection - IP in intersection
+suite7-ip4.tmpl      INvalid  | INvalid INvalid INvalid | difficult intersection - IP falls out due to intersection
+suite7-ip5.tmpl      INvalid  | INvalid INvalid INvalid | difficult intersection - IP unrelated to permitted constraints
+suite7-ip6.tmpl      INvalid  | INvalid INvalid INvalid | difficult intersection - IP falls out due to intersection
+suite7-ip7.tmpl      valid    | valid   valid   INvalid | difficult intersection - IP in intersection
+suite7-ip8.tmpl      INvalid  | INvalid INvalid INvalid | difficult intersection - IP unrelated to constraints
+suite8-ip1.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP unrealted to constraints
+suite8-ip2.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP falls out due to intersection
+suite8-ip3.tmpl      valid    | valid   valid   INvalid | IPv6 intersection - IP in intersection
+suite8-ip4.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP falls out due to intersection
+suite8-ip5.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP unrealted to constraints
+suite8-ip6.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP falls out due to intersection
+suite8-ip7.tmpl      INvalid  | INvalid INvalid INvalid | IPv6 intersection - IP unrealted to constraints
+suite9-ip1.tmpl      INvalid  | INvalid INvalid INvalid | IPv4/v6 interaction - IP falls out due to intersection
+suite9-ip2.tmpl      INvalid  | INvalid INvalid INvalid | IPv4/v6 interaction - IP unrelated to permitted constraints
+suite9-ip3.tmpl      INvalid  | INvalid INvalid INvalid | IPv4/v6 interaction - IP falls out due to intersection
+suite9-ip4.tmpl      INvalid  | INvalid INvalid INvalid | IPv4/v6 interaction - IPv6 in permitted range (but gets restricted)
+suite9-ip5.tmpl      INvalid  | INvalid INvalid INvalid | IPv4/v6 interaction - IPv6 unrealted to permitted ranges
+suite0-dns10.tmpl    INvalid  | INvalid INvalid INvalid | DNS name a superdomain of permitted intersection
+suite0-dns1.tmpl     INvalid  | INvalid INvalid INvalid | DNS name not in permitted ranges
+suite0-dns2.tmpl     valid    | valid   valid   valid   | DNS name in permitted TLD intersection
+suite0-dns3.tmpl     INvalid  | INvalid INvalid INvalid | DNS name not in permitted TLD intersection
+suite0-dns4.tmpl     INvalid  | INvalid INvalid INvalid | DNS name not in permitted TLD intersection
+suite0-dns5.tmpl     INvalid  | INvalid INvalid INvalid | DNS name not in permitted TLD intersection
+suite0-dns6.tmpl     valid    | valid   valid   valid   | DNS name a subdomain of permitted intersection
+suite0-dns7.tmpl     valid    | valid   valid   valid   | DNS name is directly a permitted intersection
+suite0-dns8.tmpl     INvalid  | INvalid INvalid INvalid | DNS name in a different domain than permitted inersection
+suite0-dns9.tmpl     INvalid  | INvalid INvalid INvalid | DNS name not in permitted intersection
+suite0-email1a.tmpl  valid    | valid   INvalid INvalid | email is directly permitted domain
+suite0-email1b.tmpl  valid    | valid   valid   valid   | email is directly permitted domain
+suite0-email2a.tmpl  INvalid  | INvalid INvalid INvalid | email a subdomain of permitted (but subdomains are excluded)
+suite0-email2b.tmpl  INvalid  | INvalid INvalid INvalid | email a subdomain of permitted (but subdomains are excluded)
+suite0-email3a.tmpl  valid    | valid   valid   INvalid | email a subdomain of permitted (subdomains permitted)
+suite0-email3b.tmpl  valid    | valid   valid   valid   | email a subdomain of permitted (subdomains permitted)
+suite1-dns1.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is a subdomain of excluded
+suite1-dns2.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is a subdomain of excluded
+suite1-dns3.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is directly an excluded range
+suite1-dns4.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is directly an excluded range
+suite1-dns5.tmpl     valid    | valid   valid   valid   | DNS name unrelated to excluded ranges
+suite2-dns1.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is permitted constraint, but intersection is empty
+suite2-dns2.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is permitted constraint, but intersection is empty
+suite2-dns3.tmpl     INvalid  | INvalid INvalid INvalid | DNS name on a different level than permitted intersection
+suite2-dns4.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is superdomain of permitted, but intersection is empty
+suite2-dns5.tmpl     INvalid  | INvalid INvalid INvalid | DNS name unrelated to permitted constraints
+suite3-dns1.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is superdomain of permitted intersection
+suite3-dns2.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is permitted constraints that gets out when intersecting
+suite3-dns3.tmpl     valid    | valid   valid   valid   | DNS name is permitted intersection directly
+suite3-dns4.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is string-similar to permitted intersection
+suite3-dns5.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is superdomain of permitted intersection
+suite4-dns1.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is one of the constraints, but intersection is empty
+suite4-dns2.tmpl     INvalid  | INvalid INvalid INvalid | DNS name is one of the constraints, but intersection is empty
+suite4-dns3.tmpl     INvalid  | INvalid INvalid INvalid | DNS name unrelated to constraints, but intersection is empty
+suite4-dns4.tmpl     INvalid  | INvalid INvalid INvalid | DNS name unrelated to constraints, but intersection is empty
+suite4-dns5.tmpl     INvalid  | INvalid INvalid INvalid | DNS name unrelated to constraints, but intersection is empty
