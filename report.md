@@ -12,6 +12,8 @@ Test results in summary:
 Below are the details for all failed tests, referencing the test results at https://gitlab.com/mukrop/name-constraints-tests/blob/master/results.txt
 For easier comprehension, there's an exclamation mark ('!') in lines where test results differ among the libraries.
 
+The tests reflect the GnuTLS built-in tests from `tests/name-constraints.c`, `tests/name-constraints-merge.c`, `tests/name-cinstraints-ip.c` and a few additional tests. There's a plan to port a subset of these to NSS ([bug 757854](https://bugzilla.mozilla.org/show_bug.cgi?id=757854)).
+
 ## Inspecting common name (test bad3)
 
 The intermediate CA excludes DNS of 'example.com', the endpoint certificate is for common name `www.example.com` but lacks the subject alternative name extension. This tests the legacy processing of X.509 v1 certificates that did not support subject alternative names (tests whether CN is also checked for name constraints).
