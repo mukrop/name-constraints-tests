@@ -38,7 +38,7 @@ fi
 rm -rf ${WORKDIR}
 mkdir -p ${WORKDIR}
 
-printf '%-20s %-8s | %-7s %-7s %-7s | %s\n' "" Expected GnuTLS NSS OpenSSL "Test description"
+printf '%-20s %-1s %-8s | %-7s %-7s %-7s | %s\n' "" "" Expected GnuTLS NSS OpenSSL "Test description"
 
 for CHAIN in $@
 do
@@ -102,7 +102,13 @@ do
         OUTCOME_OPENSSL=INvalid
     fi
 
-    printf '%-20s %-8s | %-7s %-7s %-7s | %s\n' `basename ${CHAIN}` ${OUTCOME_EXPECTED} ${OUTCOME_GNUTLS} ${OUTCOME_NSS} ${OUTCOME_OPENSSL} "${DESCRIPTION}"
+    OVERALL=
+    if [ ${OUTCOME_EXPECTED} != ${OUTCOME_GNUTLS} ] || [ ${OUTCOME_EXPECTED} != ${OUTCOME_NSS} ] || [ ${OUTCOME_EXPECTED} != ${OUTCOME_OPENSSL} ]
+    then
+        OVERALL="!"
+    fi
+
+    printf '%-20s %-1s %-8s | %-7s %-7s %-7s | %s\n' `basename ${CHAIN}` "${OVERALL}" ${OUTCOME_EXPECTED} ${OUTCOME_GNUTLS} ${OUTCOME_NSS} ${OUTCOME_OPENSSL} "${DESCRIPTION}"
     if [ 0$DEBUG -gt 0 ]
     then
         echo "GnuTLS:  ${OUTPUT_GNUTLS}"

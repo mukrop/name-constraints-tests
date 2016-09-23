@@ -1,21 +1,22 @@
 # Summary
 
-We compared the behaviour of GnuTLS, NSS and OpenSSL with respect to X.509 name constraints extension (in particular DNS, email and IP constraints). 107 of GnuTLS internal tests were transformed to independent cert chains (easy for high-level valid/invalid tests abstracting the library internals). Test details and scripts available at https://gitlab.com/mukrop/name-constraints-tests, feel free to use and improve.
+We compared the behavior of GnuTLS, NSS and OpenSSL with respect to X.509 name constraints extension (in particular DNS, email and IP constraints). 107 of GnuTLS internal tests were transformed to independent cert chains (easy for high-level valid/invalid tests abstracting the library internals). Test details and scripts available at https://gitlab.com/mukrop/name-constraints-tests, feel free to use and improve.
 
 Test results in summary:
-* If DNS name constraints are present but the subject alternative names extension is not, GnuTLS checks the common name with regard to DNS name constraints (depending on the key purpose). NSS and OpenSSL do not check common name in this situation.
+* If DNS name constraints are present but the subject alternative names extension is not, GnuTLS checks the common name with regard to DNS name constraints (depending on the key purpose). NSS and OpenSSL do not check the common name in this situation.
 * Libraries differ in checking the mailbox format: OpenSSL seems to check the format precisely, NSS only partly and GnuTLS not at all.
-* OpenSSL does not support IP constraining, thus all corresponding tests containing IP constraints report certificates as INvalid(unsupported name constraint type, name constraints extension is marked critical).
+* OpenSSL does not support IP constraining, thus all corresponding tests containing IP constraints report certificates as INvalid (unsupported name constraint type, name constraints extension is marked critical).
 
 # Details
 
 Below are the details for all failed tests, referencing the test results at https://gitlab.com/mukrop/name-constraints-tests/blob/master/results.txt
+For easier comprehension, there's an exclamation mark ('!') in lines where test results differ among the libraries.
 
 ## Inspecting common name (test bad3)
 
 The intermediate CA excludes DNS of 'example.com', the endpoint certificate is for common name `www.example.com` but lacks the subject alternative name extension. This tests the legacy processing of X.509 v1 certificates that did not support subject alternative names (tests whether CN is also checked for name constraints).
 
-GnuTLS checks common name compliance to DNS constraints in this case, because 1) there are DNS constraints present 2) there are no subject anternative DNS names and 3) the key purpose is TLS WWW server (More precisely, the key purpose is not set in the test, which is interpreted by GnuTLS as any purpose including the TLS server). This is why the test fails in GnuTLS. In source code, refer to `gnutls_x509_name_constraints_check_crt` in `lib/x509/name_constraints.c`
+GnuTLS checks common name compliance to DNS constraints in this case, because 1) there are DNS constraints present 2) there are no subject alternative DNS names and 3) the key purpose is TLS WWW server (More precisely, the key purpose is not set in the test, which is interpreted by GnuTLS as any purpose including the TLS server). This is why the test fails in GnuTLS. In source code, refer to `gnutls_x509_name_constraints_check_crt` in `lib/x509/name_constraints.c`
 
 Neither NSS nor OpenSSL seem to perform such check here, thus the test passes. For NSS, this is contrary to implications of [bug 552346](https://bugzilla.mozilla.org/show_bug.cgi?id=552346) which claims NSS still honors DNS names found in subject CN.
 
@@ -33,9 +34,9 @@ RFC5280 states that if the endpoint certificate has a subject alternative name o
 
 For suite0-email1a, the intermediate CA permits any mailbox on the host `ccc.com` but not on any of its subdomains. The endpoint certificate claims an alternative email name of 'ccc.com'. This is considered OK by GnuTLS but not by NSS nor OpenSSL.
 
-For suite0-email3a, the intermediate CA permits any mailbox on any subdomains of `ccc.com` but not on the host of `ccc.com`. The endpoint certificate claims an alternative email name of 'xxx.ccc.com'. This is considered OK by GnuTLS and NSS but not OpenSSL. Both abovementioned suites pass in all libraries, if the endpoint email address is prepended with `mail@`.
+For suite0-email3a, the intermediate CA permits any mailbox on any subdomains of `ccc.com` but not on the host of `ccc.com`. The endpoint certificate claims an alternative email name of 'xxx.ccc.com'. This is considered OK by GnuTLS and NSS but not OpenSSL. Both above-mentioned suites pass in all libraries if the endpoint email address is prepended with `mail@`.
 
-**Security repercussion:** Althouh NSS and OpenSSL accept certificates invalid according to the RFCs (wrong email format), I do not see a direct security thread this may pose. Furthermore, it is highly unlikely that a trusted CA would issue certificates with such incomplete email addresses.
+**Security repercussion:** Although NSS and OpenSSL accept certificates invalid according to the RFCs (wrong email format), I do not see a direct security threat this may pose. Furthermore, it is highly unlikely that a trusted CA would issue certificates with such incomplete email addresses.
 
 **Recommended action:** None.
 
