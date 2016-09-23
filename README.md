@@ -7,7 +7,7 @@ This repository contains a set of scripts for automatically testing X.509 name c
 
 * Test results can be found in [results.txt](results.txt).
 * Column `Expected` has the expected result, subsequent columns have results for particular libraries.
-* These were run on Fedora 23 with OpenSSL 1.0.2h-fips, NSS 3.25.0 and GnuTLS 3.5.4 (commit d69e56, unreleased by the date of testing).
+* These were run on Fedora 23 with OpenSSL 1.0.2h-fips, NSS 3.25.0 and GnuTLS 3.5.4.
 * Test results in summary:
   * OpenSSL seems not to support IP constraining, thus all corresponding tests see all chains containing IP constraint certificates as invalid (unsupported name constraint type).
   * If DNS name constraints are present but the subject alternative names extension is not, GnuTLS checks the common name with regard to DNS name constraints (depending on the key purpose). NSS and OpenSSL do not check common name in this situation.
